@@ -5,7 +5,7 @@ class Personagem:
         self.__pontosMana = 50
 
     def tomarDano(self, dano: int):
-        if dano <= self.__pontosVida:
+        if dano >= self.__pontosVida:
             self.__pontosVida = 0
         else:
             self.__pontosVida -= dano
