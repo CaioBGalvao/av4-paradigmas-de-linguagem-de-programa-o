@@ -9,3 +9,9 @@ class Personagem:
             self.__pontosVida = 0
         else:
             self.__pontosVida -= dano
+
+    def curar(self, cura: int):
+        if cura + self.__pontosVida > 100:
+            self.__pontosVida = 100
+        else:
+            self.__pontosVida += cura
