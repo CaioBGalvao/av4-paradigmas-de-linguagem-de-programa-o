@@ -11,7 +11,5 @@ class Personagem:
             self.__pontosVida -= dano
 
     def curar(self, cura: int):
-        if cura + self.__pontosVida > 100:
-            self.__pontosVida = 100
-        else:
-            self.__pontosVida += cura
+        nova_vida = self.__pontosVida + cura
+        self.__pontosVida = min(nova_vida, 100)
