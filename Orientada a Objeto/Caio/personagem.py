@@ -43,3 +43,11 @@ class Personagem:
         """
         nova_vida = self.__pontosVida + cura
         self.__pontosVida = min(nova_vida, 100)
+
+    def obtemPontosVida(self) -> int:
+        """Retorna a quantidade de pontos de vida.
+
+        Returns:
+            int: O valor atual de __pontosVida.
+        """
+        return self.__pontosVida
