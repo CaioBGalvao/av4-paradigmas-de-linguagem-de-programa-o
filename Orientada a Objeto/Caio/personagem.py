@@ -1,13 +1,9 @@
 class Personagem:
     """Representa um personagem em um jogo de RPG.
 
-    Esta classe gerencia os estados de vida e mana de um personagem,
-    controlando as regras para tomar dano e ser curado.
-
-    Attributes:
-        __nome (str): O nome privado do personagem.
-        __pontosVida (int): A contagem de vida privada, com máximo de 100.
-        __pontosMana (int): A contagem de mana privada, com máximo de 50.
+    Gerencia o estado do personagem usando Propriedades Python
+    para garantir que as regras de negócio (limites de vida/mana)
+    sejam sempre aplicadas.
     """
 
     def __init__(self, nome: str):
@@ -16,38 +12,80 @@ class Personagem:
         Args:
             nome (str): O nome que será atribuído ao personagem.
         """
-        self.__nome = nome
+        self.nome = nome  # Usa o setter de 'nome' logo no início
         self.__pontosVida = 100
         self.__pontosMana = 50
 
+    # --- Propriedade NOME ---
+    @property
+    def nome(self) -> str:
+        """Retorna o nome (privado) do personagem."""
+        return self.__nome
+
+    @nome.setter
+    def nome(self, novo_nome: str):
+        """Define um novo nome, garantindo que não seja vazio."""
+        if novo_nome and novo_nome.strip():
+            self.__nome = novo_nome.strip()
+        else:
+            print("Erro: O nome não pode ser vazio.")
+            # Em um código real, você poderia lançar uma exceção:
+            # raise ValueError("O nome não pode ser vazio")
+
+    # --- Propriedade PONTOS DE VIDA ---
+    @property
+    def pontosVida(self) -> int:
+        """Retorna a quantidade de pontos de vida."""
+        return self.__pontosVida
+
+    @pontosVida.setter
+    def pontosVida(self, novo_valor: int):
+        """Define os pontos de vida, aplicando regras de limite (0 a 100)."""
+        if novo_valor > 100:
+            self.__pontosVida = 100
+        elif novo_valor < 0:
+            self.__pontosVida = 0
+        else:
+            self.__pontosVida = novo_valor
+
+    # --- Propriedade PONTOS DE MANA ---
+    @property
+    def pontosMana(self) -> int:
+        """Retorna a quantidade de pontos de mana."""
+        return self.__pontosMana
+
+    @pontosMana.setter
+    def pontosMana(self, novo_valor: int):
+        """Define os pontos de mana, aplicando regras de limite (0 a 50)."""
+        if novo_valor > 50:
+            self.__pontosMana = 50
+        elif novo_valor < 0:
+            self.__pontosMana = 0
+        else:
+            self.__pontosMana = novo_valor
+
+    # --- MÉTODOS DE AÇÃO  ---
+
     def tomarDano(self, dano: int):
-        """Aplica dano ao personagem, limitando a vida mínima a 0.
-
-        Calcula a nova vida subtraindo o dano e usa max() para garantir
-        que o resultado nunca seja menor que 0.
-
-        Args:
-            dano (int): A quantidade de dano a ser aplicada.
-        """
-        nova_vida = self.__pontosVida - dano
-        self.__pontosVida = max(nova_vida, 0)
+        """Aplica dano ao personagem."""
+        self.pontosVida = self.pontosVida - dano
 
     def curar(self, cura: int):
-        """Aplica cura ao personagem, limitando a vida máxima a 100.
+        """Aplica cura ao personagem."""
+        self.pontosVida = self.pontosVida + cura
 
-        Calcula a nova vida somando a cura e usa min() para garantir
-        que o resultado nunca seja maior que 100.
+    def usarMagia(self, custoMana: int) -> bool:
+        """Tenta usar uma magia, consumindo mana.
 
-        Args:
-            cura (int): A quantidade de pontos de vida a serem restaurados.
+        Retorna True se bem-sucedido, False caso contrário.
         """
-        nova_vida = self.__pontosVida + cura
-        self.__pontosVida = min(nova_vida, 100)
+        if self.pontosMana >= custoMana:
+            self.pontosMana = self.pontosMana - custoMana
+            return True
+        else:
+            print(f"{self.nome} tentou usar magia, mas não tem mana!")
+            return False
 
-    def obtemPontosVida(self) -> int:
-        """Retorna a quantidade de pontos de vida.
-
-        Returns:
-            int: O valor atual de __pontosVida.
-        """
-        return self.__pontosVida
+    def estaVivo(self) -> bool:
+        """Verifica se o personagem está vivo."""
+        return self.pontosVida > 0
