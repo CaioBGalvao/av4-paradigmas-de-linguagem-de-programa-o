@@ -3,84 +3,72 @@ class Personagem:
 
     Gerencia o estado do personagem usando Propriedades Python
     para garantir que as regras de negócio (limites de vida/mana)
-    sejam sempre aplicadas.
+    sejam sempre aplicadas de forma centralizada.
     """
 
-    def __init__(self, nome: str):
-        """Inicializa um novo Personagem.
+    VIDA_MAXIMA = 100
+    VIDA_MINIMA = 0
+    MANA_MAXIMA = 50
+    MANA_MINIMA = 0
 
-        Args:
-            nome (str): O nome que será atribuído ao personagem.
-        """
-        self.nome = nome  # Usa o setter de 'nome' logo no início
-        self.__pontosVida = 100
-        self.__pontosMana = 50
+    def __init__(self, nome: str):
+        """Inicializa um novo Personagem."""
+        self.nome = nome
+        self.pontosVida = self.VIDA_MAXIMA
+        self.pontosMana = self.MANA_MAXIMA
 
     # --- Propriedade NOME ---
     @property
     def nome(self) -> str:
-        """Retorna o nome (privado) do personagem."""
         return self.__nome
 
     @nome.setter
     def nome(self, novo_nome: str):
-        """Define um novo nome, garantindo que não seja vazio."""
         if novo_nome and novo_nome.strip():
             self.__nome = novo_nome.strip()
         else:
-            print("Erro: O nome não pode ser vazio.")
-            # Em um código real, você poderia lançar uma exceção:
-            # raise ValueError("O nome não pode ser vazio")
+            raise ValueError("O nome não pode ser vazio")
 
     # --- Propriedade PONTOS DE VIDA ---
     @property
     def pontosVida(self) -> int:
-        """Retorna a quantidade de pontos de vida."""
         return self.__pontosVida
 
     @pontosVida.setter
     def pontosVida(self, novo_valor: int):
-        """Define os pontos de vida, aplicando regras de limite (0 a 100)."""
-        if novo_valor > 100:
-            self.__pontosVida = 100
-        elif novo_valor < 0:
-            self.__pontosVida = 0
-        else:
-            self.__pontosVida = novo_valor
+        self.__pontosVida = max(self.VIDA_MINIMA,
+                                min(self.VIDA_MAXIMA, novo_valor))
 
     # --- Propriedade PONTOS DE MANA ---
     @property
     def pontosMana(self) -> int:
-        """Retorna a quantidade de pontos de mana."""
         return self.__pontosMana
 
     @pontosMana.setter
     def pontosMana(self, novo_valor: int):
-        """Define os pontos de mana, aplicando regras de limite (0 a 50)."""
-        if novo_valor > 50:
-            self.__pontosMana = 50
-        elif novo_valor < 0:
-            self.__pontosMana = 0
-        else:
-            self.__pontosMana = novo_valor
+        self.__pontosMana = max(self.MANA_MINIMA,
+                                min(self.MANA_MAXIMA, novo_valor))
 
-    # --- MÉTODOS DE AÇÃO  ---
+    # --- MÉTODOS DE AÇÃO ---
 
     def tomarDano(self, dano: int):
         """Aplica dano ao personagem."""
-        self.pontosVida = self.pontosVida - dano
+        if dano > 0:
+            self.pontosVida = self.pontosVida - dano
 
     def curar(self, cura: int):
         """Aplica cura ao personagem."""
-        self.pontosVida = self.pontosVida + cura
+        if cura > 0:
+            self.pontosVida = self.pontosVida + cura
 
     def usarMagia(self, custoMana: int) -> bool:
-        """Tenta usar uma magia, consumindo mana.
+        """Tenta usar uma magia, consumindo mana."""
+        if custoMana <= 0:
+            return False
 
-        Retorna True se bem-sucedido, False caso contrário.
-        """
         if self.pontosMana >= custoMana:
             self.pontosMana = self.pontosMana - custoMana
+            print(f"{self.nome} usou magia!")
             return True
         else:
             print(f"{self.nome} tentou usar magia, mas não tem mana!")
@@ -88,4 +76,4 @@ class Personagem:
 
     def estaVivo(self) -> bool:
         """Verifica se o personagem está vivo."""
-        return self.pontosVida > 0
+        return self.pontosVida > self.VIDA_MINIMA
