@@ -2,8 +2,6 @@
 Arquivo: aventura.py
 Autor: Caio Barbosa Galvão
 Objetivo: Executa uma narrativa de batalha linear e determinística.
-Dependência: Este arquivo PRECISA do arquivo 'personagem.py'
-             na mesma pasta para funcionar.
 """
 
 # Importa a classe 'Personagem' do arquivo 'personagem.py'
@@ -67,7 +65,7 @@ def main() -> None:
         mago_j = Personagem(nome_mago_j)
         guerreiro_j = Personagem(nome_guerreiro_j)
         sacerdote_j = Personagem(nome_sacerdote_j)
-        # Dica de tipo para a lista (opcional, mas bom)
+
         time_jogador: List[Personagem] = [
             mago_j,
             guerreiro_j,
@@ -78,7 +76,7 @@ def main() -> None:
         mago_i = Personagem("Mago Maligno")
         guerreiro_i = Personagem("Orc Bruto")
         sacerdote_i = Personagem("Clérigo das Sombras")
-        # Dica de tipo para a lista
+
         time_inimigo: List[Personagem] = [
             mago_i,
             guerreiro_i,
@@ -189,7 +187,6 @@ def main() -> None:
     print("A BATALHA TERMINOU!")
     print("*" * 40)
 
-    # Chama a função e o Pylance sabe que os tipos estão corretos
     mostrar_status_final(time_jogador, time_inimigo)
 
     print("RESULTADO: O time inimigo venceu a batalha.")
